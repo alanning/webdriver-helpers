@@ -3,11 +3,13 @@
   "name":"webdriver-helpers",
   "description":"Convenience functions for working with WebDriver",
   "version":"1.0.0",
+  "keywords":["selenium","webdriverjs","webdriver","testing"],
   "repository": {
     "type":"git",
     "url":"https://github.com/alanning/webdriver-helpers.git"
   },
   "bugs":"https://github.com/alanning/webdriver-helpers/issues",
   "main":"./index",
+  "dependencies":{"selenium-webdriver":"*"},
   "license":"MIT"
 }
