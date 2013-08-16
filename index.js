@@ -1,8 +1,5 @@
 (function () {
 
-// establish global object before 'use strict'
-WebDriverHelpers = function () {};
-
 "use strict";
 
 
@@ -31,6 +28,7 @@ function _extend (target, source) {
  * 
  * @example
  *     var webdriver = require('selenium-webdriver'),
+ *         WebDriverHelpers = require('webdriver-helpers'),
  *         driver,
  *         helpers;
  *     
@@ -60,7 +58,7 @@ function _extend (target, source) {
  * @return {Object} object with several convenience functions
  * @constructor
  */
-WebDriverHelpers = function (webdriver, driver) {
+var WebDriverHelpers = function (webdriver, driver) {
   this.flow = webdriver.promise.controlFlow();
   this.webdriver = webdriver;
   this.driver = driver;
@@ -470,5 +468,6 @@ _extend(WebDriverHelpers.prototype, {
 
 });  // end _extend WebDriverHelpers.prototype
 
+module.exports = WebDriverHelpers;
 
 })();

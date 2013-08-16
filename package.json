@@ -1,0 +1,13 @@
+{
+  "author":"Adrian Lanning",
+  "name":"webdriver-helpers",
+  "description":"Convenience functions for working with WebDriver",
+  "version":"1.0.0",
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/alanning/webdriver-helpers.git"
+  },
+  "bugs":"https://github.com/alanning/webdriver-helpers/issues",
+  "main":"./index",
+  "license":"MIT"
+}
