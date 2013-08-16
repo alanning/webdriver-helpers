@@ -3,8 +3,19 @@ webdriver-helpers
 
 Convenience functions for working with WebDriver in Javascript
 
+<br />
 
-* Includes the following:
+### Usage
+
+```$ npm install webdriver-helpers```
+
+See [online docs](http://alanning.github.io/webdriver-helpers/) for examples.
+
+<br />
+
+
+### Helpers
+* Includes the following functions:
   * populateElements
   * findElementInCollectionByText
   * avoidStaleElement
@@ -16,6 +27,9 @@ Convenience functions for working with WebDriver in Javascript
   * selectByValue
   * populateTextBox
   * populateElement
+
+
+<br />
 
 
 ### Documentation
