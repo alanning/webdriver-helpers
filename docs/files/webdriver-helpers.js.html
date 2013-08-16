@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>webdriver-helpers.js - webdriver-helpers</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.7.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.7.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title="webdriver-helpers"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/WebDriverHelpers.html">WebDriverHelpers</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: webdriver-helpers.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+(function () {
+
+&#x2F;&#x2F; establish global object before &#x27;use strict&#x27;
+WebDriverHelpers = function () {};
+
+&quot;use strict&quot;;
+
+
+&#x2F;&#x2F; polyfill
+if ( !Array.prototype.forEach ) {
+  Array.prototype.forEach = function(fn, scope) {
+    for(var i = 0, len = this.length; i &lt; len; ++i) {
+      fn.call(scope, this[i], i, this);
+    }
+  }
+}
+
+&#x2F;**
+ * Add properties from source object to target object
+ *&#x2F;
+function _extend (target, source) {
+  for (var prop in source) {
+    target[prop] = source[prop];
+  }
+}
+
+
+&#x2F;**
+ * Provides several functions that make using WebDriver more 
+ * convenient.
+ *
+ * Used like this:
+ *
+ *   var webdriver = require(&#x27;selenium-webdriver&#x27;),
+ *       driver,
+ *       helpers;
+ *   
+ *   driver = require(&#x27;.&#x2F;drivers&#x2F;selenium-server.js&#x27;)(webdriver, {
+ *     browserName: &#x27;chrome&#x27;,
+ *     seleniumProtocol: &#x27;WebDriver&#x27;,
+ *     &#x27;chrome.switches&#x27;: [&#x27;--window-size=1366,768&#x27;] &#x2F;&#x2F; this is being ignored
+ *   });
+ *
+ *   driver.manage().timeouts().setScriptTimeout(5000);
+ *   driver.manage().timeouts().implicitlyWait(5000);
+ *
+ *   helpers = new WebDriverHelpers(webdriver, driver);
+ *
+ *   function login (email, password) {
+ *     helpers.populateElements({
+ *       &#x27;#login-email&#x27;: email,
+ *       &#x27;#login-password&#x27;: password
+ *     });
+ *
+ *     helpers.id(&#x27;login-submit-btn&#x27;).click();
+ *   }
+ *
+ * @class WebDriverHelpers
+ * @param {Object} webdriver selenium-webdriver instance
+ * @param {Object} driver browser driver instance
+ * @return {Object} object with several convenience functions
+ * @constructor
+ *&#x2F;
+WebDriverHelpers = function (webdriver, driver) {
+  this.flow = webdriver.promise.controlFlow();
+  this.webdriver = webdriver;
+  this.driver = driver;
+};
+
+_extend(WebDriverHelpers.prototype, {
+
+  &#x2F;**
+   * Sugar for: this.driver.findElement(this.webdriver.By.name(args))
+   *
+   * @method name
+   * @param {String} args
+   * @return {Object} webdriver element
+   *&#x2F;
+  name: function (args) {
+    return this.driver.findElement(this.webdriver.By.name(args));
+  },
+
+  &#x2F;**
+   * Sugar for: this.driver.findElement(this.webdriver.By.id(args))
+   *
+   * @method id
+   * @param {String} args
+   * @return {Object} webdriver element
+   *&#x2F;
+  id: function (args) {
+    return this.driver.findElement(this.webdriver.By.id(args));
+  },
+
+  &#x2F;**
+   * Sugar for: this.driver.findElement(this.webdriver.By.tagName(args)
+   *
+   * @method tagName
+   * @param {String} args
+   * @return {Object} webdriver element
+   *&#x2F;
+  tagName: function (args) {
+    return this.driver.findElement(this.webdriver.By.tagName(args));
+  },
+
+  &#x2F;**
+   * Sugar for: this.driver.findElement(this.webdriver.By.className(args))
+   *
+   * @method className
+   * @param {String} args
+   * @return {Object} webdriver element
+   *&#x2F;
+  className: function (args) {
+    return this.driver.findElement(this.webdriver.By.className(args));
+  },
+
+  &#x2F;**
+   * Selects a drop-down option by value
+   *
+   * @method selectByValue
+   * @param {webdriver.Locator|Object.&lt;string&gt;} locator The locator
+   *     strategy to use when searching for the select element.
+   * @param {string} value The value of the option to select
+   *&#x2F;
+  selectByValue: function (locator, value) {
+    var selElement = this.driver.findElement(locator);
+    selElement.findElement(this.webdriver.By.css(&quot;option[value=&#x27;&quot; + value + &quot;&#x27;]&quot;))
+      .click();
+  },
+
+  &#x2F;**
+   * Selects a radio button element by value
+   *
+   * @method radioByValue
+   * @param {string} name The name of the radio button group
+   * @param {string} value The value of the option to select
+   *&#x2F;
+  radioByValue: function (name, value) {
+    var locator = &quot;input[name=&#x27;&quot; + name + &quot;&#x27;][value=&#x27;&quot; + value + &quot;&#x27;]&quot;;
+    this.driver.findElement(this.webdriver.By.css(locator))
+      .click();
+  },
+
+  &#x2F;**
+   * Pauses for a short amount of time, giving webdriver time
+   * to re-render the page, if needed.
+   *
+   * @method avoidStaleElement 
+   *&#x2F;
+  avoidStaleElement: function () {
+    var i = 0;
+    this.driver.wait(function () {
+      i++;
+      &#x2F;&#x2F;console.log(i);
+      return (i &gt; 3);
+    }, 3000);
+  },
+
+  &#x2F;**
+   * Easily set values of form elements by passing a map of 
+   * css selector &#x2F; element value pairs.
+   *
+   * Ex:
+   *   &#x2F;&#x2F; populate a radio button group, a select box, a text
+   *   &#x2F;&#x2F; input and a textarea
+   *   var helpers = new WebDriverHelpers(webdriver, driver);
+   *   helpers.populateElements({
+   *     &#x27;input[name=&quot;gender&quot;][value=&quot;M&quot;]&#x27;: &#x27;M&#x27;,
+   *     &#x27;#country&#x27;: &quot;United States&quot;,
+   *     &#x27;#age&#x27;: &#x27;34&#x27;,
+   *     &#x27;#comment&#x27;: &quot;example msg&quot;
+   *   });
+   *
+   * @method populateElements
+   * @param {Object} locatorValuePairs key&#x2F;value pairs consisting of a css 
+   *                    string locator for a form element and a string or 
+   *                    array of strings to populate the element with.
+   *&#x2F;
+  populateElements: function (locatorValuePairs) {
+    var key,
+        value,
+        locator,
+        singleWord;
+
+    for (key in locatorValuePairs) {
+      value = locatorValuePairs[key];
+      locator = { css: key };
+
+      &#x2F;&#x2F; optimize &#x27;id&#x27; case
+      singleWord = -1 === key.indexOf(&#x27; &#x27;);
+      if (singleWord &amp;&amp; 
+          &#x27;#&#x27; === key.charAt(0)) {
+        locator = { id: key.substring(1) };
+      }
+
+      &#x2F;&#x2F;console.log(&quot;locator &quot;, locator, &quot;, value &quot;, value);
+      
+      this.populateElement(locator, value);
+    }
+  },  &#x2F;&#x2F; end populateElements 
+
+  &#x2F;**
+   * Find first element in a group who&#x27;s text matches parameter.
+   *
+   * For example:
+   *
+   *   var findPersonByName = function (nameOfPerson) {
+   *     var collectionLocator = {
+   *           &#x27;css&#x27;:&#x27;div.people &gt; .person&#x27;
+   *         },
+   *         criteriaLocator = {
+   *           &#x27;className&#x27;:&#x27;name&#x27;
+   *         };
+   *         
+   *     return findElementInCollectionByText(
+   *         collectionLocator,
+   *         criteriaLocator,
+   *         nameOfPerson
+   *       );
+   *   };
+   *
+   * ...can be called like:
+   * 
+   *   it(&quot;can click person&quot;,
+   *     function (done) {
+   *       authenticate().
+   *         then(findPersonByName(&quot;Jeff Winger&quot;)).
+   *         then(clickPerson).
+   *         then(finish(done), error);
+   *     });
+   *
+   * ...and will match:
+   *
+   *   &lt;div class=&quot;people&quot;&gt;
+   *     &lt;div class=&quot;person&quot;&gt;
+   *       &lt;p class=&quot;name&quot;&gt;Jeff Winger&lt;&#x2F;p&gt;
+   *       &lt;p class=&quot;pic&quot;&gt;...&lt;&#x2F;p&gt;
+   *     &lt;&#x2F;div&gt;
+   *   &lt;&#x2F;div&gt;
+   *
+   * @method findElementInCollectionByText
+   * @param {webdriver.Locator|Object.&lt;string&gt;} collectionLocator The locator 
+   *     for the group of elements to search
+   * @param {webdriver.Locator|Object.&lt;string&gt;} criteriaLocator The locator 
+   *     for the element who&#x27;s text should be compared, relative to collection
+   * @param {string} text The text to search for.
+   * @return {function} A function that, when executed, returns a promise that 
+   *     will be resolved with the matching element.
+   *&#x2F;
+  findElementInCollectionByText: function (collectionLocator, criteriaLocator, text) {
+    var self = this;
+
+    return function () {
+      var mainDefer = self.webdriver.promise.defer();
+
+      self.driver.findElements(collectionLocator).
+        then (function (collection) {
+
+          var matchDefer = self.webdriver.promise.defer(),
+              matchPromise = matchDefer.promise,
+              resolved;
+             
+          &#x2F;&#x2F;console.log(&#x27;found elements&#x27;);
+          collection.map(function (item) {
+            item.findElement(criteriaLocator).
+              then (function (elem) {
+                self.flow.execute(function () {
+                  elem.getText().
+                    then (function (value) {
+                      &#x2F;&#x2F;console.log(&#x27;comparing &#x27; + value);
+                      if (value === text) {
+                        resolved = true;
+                        matchDefer.resolve(item);
+                      }
+                    });
+                });
+              });
+          });
+
+          self.flow.execute(function () {
+            matchPromise.then(function (item) {
+              &#x2F;&#x2F;console.log(&#x27;mainDefer.resolve&#x27;);
+              mainDefer.resolve(item);
+            });
+            &#x2F;&#x2F;console.log(&#x27;resolved? &#x27; + resolved);
+            if (!resolved) {
+              throw new Error(&#x27;failed to find target element &#x27; + 
+                JSON.stringify(collectionLocator) +
+                JSON.stringify(criteriaLocator) +
+                text);
+            }
+          });
+          
+        });  &#x2F;&#x2F; end findElements.then
+        return mainDefer.promise;
+    };
+  },  &#x2F;&#x2F;  end findElementInCollectionByText
+
+  &#x2F;**
+   * Populate textbox(es) with string value(s).  If &#x27;strings&#x27; is an 
+   * array, locator is assumed to match a group of textboxes which 
+   * all have the same name.  
+   *
+   * This function performs a new find for each subsequent textbox 
+   * in order to support dynamically added inputs.  For example, when
+   * a second input field is added once a value is entered into the 
+   * first input.
+   *
+   * @method populateTextBox  
+   * @param {webdriver.Locator|Object.&lt;string&gt;} locator The locator
+   *     strategy to use when locating the target input box(es)
+   * @param {string | array&lt;string&gt;} strings The values to populate
+   *     into the text box(es)
+   * @return {function} A function which, when executed, populates
+   *     the target text boxes
+   *&#x2F;
+  populateTextBox: function (locator, strings) {
+    var self = this;
+    
+    if (&#x27;string&#x27; === typeof strings) {
+      return function () {
+        self.driver.findElement(locator).sendKeys(strings);
+      }
+    }
+    if (&#x27;number&#x27; !== typeof strings.length) {
+      throw new Error(&quot;invalid type for parameter &#x27;strings&#x27;&quot;);
+    }
+
+    &#x2F;&#x2F; else, assume strings is an Array
+    return function () {
+      var stringCount = strings.length,
+          i,
+          populateTextBoxByIndex;
+
+      &#x2F;&#x2F; populate first string 
+      self.driver.findElement(locator).sendKeys(strings[0]);
+
+      populateTextBoxByIndex = function (i) {
+        &#x2F;&#x2F; use closure to save appropriate index
+        self.driver.findElements(locator).
+          then (function (collection) {
+            
+            &#x2F;&#x2F; sanity check
+            if (i &gt;= collection.length) {
+              throw new Error(&quot;failed to locate text box for target string &#x27;&quot; +
+                strings[i] + &quot;&#x27;.&quot;);
+            }
+
+            collection[i].sendKeys(strings[i]);
+          });
+      };
+
+      &#x2F;&#x2F; populate the rest of the names
+      for (i = 1; i &lt; stringCount; i++) {
+        populateTextBoxByIndex(i);
+      }
+    }
+  },  &#x2F;&#x2F; end populateTextBox
+
+  &#x2F;**
+   * Sets the value of a form element.  
+   *
+   * Supports the following form elements:
+   *   input - text, radio, email, password
+   *   textarea
+   *   select
+   *
+   * @method populateElement
+   * @param {webdriver.Locator|Object.&lt;string&gt;} locator The locator
+   *     strategy to use when searching for the form element.
+   * @param {string | array&lt;string&gt;} strings The target value(s) of
+   *     into the form element(s)
+   *&#x2F;
+  populateElement: function (locator, value) {
+    var self = this;
+
+    if (&#x27;string&#x27; !== typeof value) {
+      &#x2F;&#x2F; assume a group of dynamically-added text boxes
+      &#x2F;&#x2F; aka. Multi-List
+      this.populateTextBox(locator, value)();
+      return;
+    } 
+
+    &#x2F;&#x2F; assume regular, non-dynamic, form element
+    this.driver.findElements(locator).then(function (collection) {
+      collection.forEach(function (elemPromise) {
+        elemPromise.then(function (element) {
+          element.getTagName().
+            then(function (tagName) {
+              switch (tagName) {
+                case &quot;select&quot;:
+                  element.findElement(self.webdriver.By.css(&quot;option[value=&#x27;&quot; + value + &quot;&#x27;]&quot;))
+                    .click();
+                  break;
+                case &quot;textarea&quot;:
+                  element.sendKeys(value);
+                  break;
+                case &quot;input&quot;:
+                  element.getAttribute(&quot;type&quot;).
+                    then(function (type) { 
+                      switch (type) {
+                        case &quot;radio&quot;:
+                          &#x2F;&#x2F; click if value matches
+                          element.getAttribute(&quot;value&quot;).
+                            then(function (val) {
+                              if (val === value) {
+                                element.click();
+                              }
+                            });
+                          break;
+                        case &quot;text&quot;:
+                        case &quot;email&quot;:
+                        case &quot;password&quot;:
+                          element.sendKeys(value);
+                          break;
+                        default:
+                          throw new Error (&quot;Unsupported input type &#x27;&quot; + type + &quot;&#x27;&quot;);
+                      }
+                    });
+                    break;
+                default:
+                  throw new Error (&quot;Unsupported form element &#x27;&quot; + tagName + &quot;&#x27;&quot;);
+              }
+          })
+        })
+      })
+    });
+
+  }  &#x2F;&#x2F; end populateElement
+
+});  &#x2F;&#x2F; end _extend WebDriverHelpers.prototype
+
+
+})();
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "webdriver-helpers",
+  "description": "Convenience functions for working with WebDriver in javascript",
+  "version": "1.0",
+  "options": {
+    "outdir": "./docs",
+    "exclude": "",
+    "paths": ["."]
+  }
+}
