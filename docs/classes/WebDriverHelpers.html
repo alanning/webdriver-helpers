@@ -90,7 +90,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l28"><code>webdriver-helpers.js:28</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;index.js.html#l25"><code>index.js:25</code></a>
         </div>
     
 
@@ -104,34 +104,6 @@
 <div class="box intro">
     <p>Provides several functions that make using WebDriver more 
 convenient.</p>
-
-<p>Used like this:</p>
-
-<p>var webdriver = require('selenium-webdriver'),
-      driver,
-      helpers;</p>
-
-<p>driver = require('./drivers/selenium-server.js')(webdriver, {
-    browserName: 'chrome',
-    seleniumProtocol: 'WebDriver',
-    'chrome.switches': ['--window-size=1366,768'] // this is being ignored
-  });</p>
-
-<p>driver.manage().timeouts().setScriptTimeout(5000);
-  driver.manage().timeouts().implicitlyWait(5000);</p>
-
-<p>helpers = new WebDriverHelpers(webdriver, driver);</p>
-
-<p>function login (email, password) {
-    helpers.populateElements({
-      '#login-email': email,
-      '#login-password': password
-    });</p>
-
-<pre class="code prettyprint"><code>helpers.id('login-submit-btn').click();
-</code></pre>
-
-<p>}</p>
 </div>
 
 
@@ -189,7 +161,7 @@ convenient.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l28"><code>webdriver-helpers.js:28</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l25"><code>index.js:25</code></a>
         
         </p>
 
@@ -258,6 +230,38 @@ convenient.</p>
         </div>
     
 
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var webdriver = require('selenium-webdriver'),
+    WebDriverHelpers = require('webdriver-helpers'),
+    driver,
+    helpers;
+
+driver = require('./drivers/selenium-server.js')(webdriver, {
+  browserName: 'chrome',
+  seleniumProtocol: 'WebDriver',
+  'chrome.switches': ['--window-size=1366,768'] // this is being ignored
+});
+
+driver.manage().timeouts().setScriptTimeout(5000);
+driver.manage().timeouts().implicitlyWait(5000);
+
+helpers = new WebDriverHelpers(webdriver, driver);
+
+function login (email, password) {
+  helpers.populateElements({
+    '#login-email': email,
+    '#login-password': password
+  });
+
+  helpers.id('login-submit-btn').click();
+}
+</code></pre>
+            </div>
+        </div>
     
 </div>
 
@@ -411,7 +415,7 @@ convenient.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l143"><code>webdriver-helpers.js:143</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l150"><code>index.js:150</code></a>
         
         </p>
 
@@ -430,6 +434,39 @@ to re-render the page, if needed.</p>
 
     
 
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var authenticate = function () {
+  var name = 'Teacher User',
+      email = 'teacher@example.com',
+      password = 'password',
+      deferred = webdriver.promise.defer(),
+      i = 0;
+
+  helpers.populateElements({
+    '#login-email': email,
+    '#login-password': password
+  });
+  helpers.id('login-buttons-password').click();
+  helpers.avoidStaleElement();
+  helpers.id('display-name-link').getText()
+    .then(function (text) {
+      var expected = name;
+      if (text.indexOf(expected) !== 0) {
+        deferred.reject(new Error(text + ' did not contain ' + expected));
+      } else {
+        deferred.resolve();
+      }
+    });
+
+  return deferred.promise;
+};
+</code></pre>
+            </div>
+        </div>
     
 </div>
 
@@ -480,7 +517,7 @@ to re-render the page, if needed.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l105"><code>webdriver-helpers.js:105</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l112"><code>index.js:112</code></a>
         
         </p>
 
@@ -596,7 +633,7 @@ to re-render the page, if needed.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l201"><code>webdriver-helpers.js:201</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l235"><code>index.js:235</code></a>
         
         </p>
 
@@ -608,44 +645,6 @@ to re-render the page, if needed.</p>
 
     <div class="description">
         <p>Find first element in a group who's text matches parameter.</p>
-
-<p>For example:</p>
-
-<p>var findPersonByName = function (nameOfPerson) {
-    var collectionLocator = {
-          'css':'div.people > .person'
-        },
-        criteriaLocator = {
-          'className':'name'
-        };</p>
-
-<pre class="code prettyprint"><code>return findElementInCollectionByText(
-    collectionLocator,
-    criteriaLocator,
-    nameOfPerson
-  );
-</code></pre>
-
-<p>};</p>
-
-<p>...can be called like:</p>
-
-<p>it("can click person",
-    function (done) {
-      authenticate().
-        then(findPersonByName("Jeff Winger")).
-        then(clickPerson).
-        then(finish(done), error);
-    });</p>
-
-<p>...and will match:</p>
-
-<p><div class="people">
-    <div class="person">
-      <p class="name">Jeff Winger</p>
-      <p class="pic">...</p>
-    </div>
-  </div></p>
     </div>
 
     
@@ -722,6 +721,47 @@ to re-render the page, if needed.</p>
     
 
     
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var findPersonByName = function (nameOfPerson) {
+  var collectionLocator = {
+        'css':'div.people &gt; .person'
+      },
+      criteriaLocator = {
+        'className':'name'
+      };
+
+  return findElementInCollectionByText(
+      collectionLocator,
+      criteriaLocator,
+      nameOfPerson
+    );
+};
+
+//...can be called like:
+
+it("can click person",
+  function (done) {
+    authenticate().
+      then(findPersonByName("Jeff Winger")).
+      then(clickPerson).
+      then(finish(done), error);
+  });
+
+//...and will match:
+
+&lt;div class="people"&gt;
+  &lt;div class="person"&gt;
+    &lt;p class="name"&gt;Jeff Winger&lt;/p&gt;
+    &lt;p class="pic"&gt;...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            </div>
+        </div>
+    
 </div>
 
                 
@@ -771,7 +811,7 @@ to re-render the page, if needed.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l83"><code>webdriver-helpers.js:83</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l80"><code>index.js:80</code></a>
         
         </p>
 
@@ -826,6 +866,15 @@ to re-render the page, if needed.</p>
     
 
     
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>helpers.id('btnSubmit').click()
+</code></pre>
+            </div>
+        </div>
+    
 </div>
 
                 
@@ -875,7 +924,7 @@ to re-render the page, if needed.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l72"><code>webdriver-helpers.js:72</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l69"><code>index.js:69</code></a>
         
         </p>
 
@@ -981,7 +1030,7 @@ to re-render the page, if needed.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l359"><code>webdriver-helpers.js:359</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l398"><code>index.js:398</code></a>
         
         </p>
 
@@ -1090,7 +1139,7 @@ to re-render the page, if needed.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l158"><code>webdriver-helpers.js:158</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l192"><code>index.js:192</code></a>
         
         </p>
 
@@ -1103,17 +1152,6 @@ to re-render the page, if needed.</p>
     <div class="description">
         <p>Easily set values of form elements by passing a map of 
 css selector / element value pairs.</p>
-
-<p>Ex:
-  // populate a radio button group, a select box, a text
-  // input and a textarea
-  var helpers = new WebDriverHelpers(webdriver, driver);
-  helpers.populateElements({
-    'input[name="gender"][value="M"]': 'M',
-    '#country': "United States",
-    '#age': '34',
-    '#comment': "example msg"
-  });</p>
     </div>
 
     
@@ -1145,6 +1183,23 @@ css selector / element value pairs.</p>
 
     
 
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>// populate a radio button group, a select box, a text
+// input and a textarea
+var helpers = new WebDriverHelpers(webdriver, driver);
+helpers.populateElements({
+  'input[name="gender"][value="M"]': 'M',
+  '#country': "United States",
+  '#age': '34',
+  '#comment': "example msg"
+});
+</code></pre>
+            </div>
+        </div>
     
 </div>
 
@@ -1201,7 +1256,7 @@ css selector / element value pairs.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l298"><code>webdriver-helpers.js:298</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l331"><code>index.js:331</code></a>
         
         </p>
 
@@ -1281,6 +1336,18 @@ first input.</p>
     
 
     
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var populateFriends = function (names) {
+  var locator = {className: "friends-mlText"};
+  return helpers.populateTextBox (locator, names);
+};
+</code></pre>
+            </div>
+        </div>
+    
 </div>
 
                 
@@ -1332,7 +1399,7 @@ first input.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l130"><code>webdriver-helpers.js:130</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l137"><code>index.js:137</code></a>
         
         </p>
 
@@ -1440,7 +1507,7 @@ first input.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l116"><code>webdriver-helpers.js:116</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l123"><code>index.js:123</code></a>
         
         </p>
 
@@ -1547,7 +1614,7 @@ first input.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;webdriver-helpers.js.html#l94"><code>webdriver-helpers.js:94</code></a>
+        <a href="..&#x2F;files&#x2F;index.js.html#l93"><code>index.js:93</code></a>
         
         </p>
 
@@ -1601,6 +1668,21 @@ first input.</p>
         </div>
     
 
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var verifyOnCheckinPage = function () {
+  helpers.tagName('h1').then(function (h1) {
+      h1.getText().then(function (text) {
+        expect(text).toBe("Check-In");
+      });
+  });
+};
+</code></pre>
+            </div>
+        </div>
     
 </div>
 
