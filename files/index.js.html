@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>webdriver-helpers.js - webdriver-helpers</title>
+    <title>index.js - webdriver-helpers</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.7.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -82,14 +82,11 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: webdriver-helpers.js</h1>
+                        <h1 class="file-heading">File: index.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 (function () {
-
-&#x2F;&#x2F; establish global object before &#x27;use strict&#x27;
-WebDriverHelpers = function () {};
 
 &quot;use strict&quot;;
 
@@ -116,32 +113,32 @@ function _extend (target, source) {
 &#x2F;**
  * Provides several functions that make using WebDriver more 
  * convenient.
- *
- * Used like this:
- *
- *   var webdriver = require(&#x27;selenium-webdriver&#x27;),
- *       driver,
- *       helpers;
- *   
- *   driver = require(&#x27;.&#x2F;drivers&#x2F;selenium-server.js&#x27;)(webdriver, {
- *     browserName: &#x27;chrome&#x27;,
- *     seleniumProtocol: &#x27;WebDriver&#x27;,
- *     &#x27;chrome.switches&#x27;: [&#x27;--window-size=1366,768&#x27;] &#x2F;&#x2F; this is being ignored
- *   });
- *
- *   driver.manage().timeouts().setScriptTimeout(5000);
- *   driver.manage().timeouts().implicitlyWait(5000);
- *
- *   helpers = new WebDriverHelpers(webdriver, driver);
- *
- *   function login (email, password) {
- *     helpers.populateElements({
- *       &#x27;#login-email&#x27;: email,
- *       &#x27;#login-password&#x27;: password
+ * 
+ * @example
+ *     var webdriver = require(&#x27;selenium-webdriver&#x27;),
+ *         WebDriverHelpers = require(&#x27;webdriver-helpers&#x27;),
+ *         driver,
+ *         helpers;
+ *     
+ *     driver = require(&#x27;.&#x2F;drivers&#x2F;selenium-server.js&#x27;)(webdriver, {
+ *       browserName: &#x27;chrome&#x27;,
+ *       seleniumProtocol: &#x27;WebDriver&#x27;,
+ *       &#x27;chrome.switches&#x27;: [&#x27;--window-size=1366,768&#x27;] &#x2F;&#x2F; this is being ignored
  *     });
  *
- *     helpers.id(&#x27;login-submit-btn&#x27;).click();
- *   }
+ *     driver.manage().timeouts().setScriptTimeout(5000);
+ *     driver.manage().timeouts().implicitlyWait(5000);
+ *
+ *     helpers = new WebDriverHelpers(webdriver, driver);
+ *
+ *     function login (email, password) {
+ *       helpers.populateElements({
+ *         &#x27;#login-email&#x27;: email,
+ *         &#x27;#login-password&#x27;: password
+ *       });
+ *
+ *       helpers.id(&#x27;login-submit-btn&#x27;).click();
+ *     }
  *
  * @class WebDriverHelpers
  * @param {Object} webdriver selenium-webdriver instance
@@ -149,7 +146,7 @@ function _extend (target, source) {
  * @return {Object} object with several convenience functions
  * @constructor
  *&#x2F;
-WebDriverHelpers = function (webdriver, driver) {
+var WebDriverHelpers = function (webdriver, driver) {
   this.flow = webdriver.promise.controlFlow();
   this.webdriver = webdriver;
   this.driver = driver;
@@ -171,6 +168,8 @@ _extend(WebDriverHelpers.prototype, {
   &#x2F;**
    * Sugar for: this.driver.findElement(this.webdriver.By.id(args))
    *
+   * @example
+   *     helpers.id(&#x27;btnSubmit&#x27;).click()
    * @method id
    * @param {String} args
    * @return {Object} webdriver element
@@ -182,6 +181,14 @@ _extend(WebDriverHelpers.prototype, {
   &#x2F;**
    * Sugar for: this.driver.findElement(this.webdriver.By.tagName(args)
    *
+   * @example
+   *     var verifyOnCheckinPage = function () {
+   *       helpers.tagName(&#x27;h1&#x27;).then(function (h1) {
+   *           h1.getText().then(function (text) {
+   *             expect(text).toBe(&quot;Check-In&quot;);
+   *           });
+   *       });
+   *     };
    * @method tagName
    * @param {String} args
    * @return {Object} webdriver element
@@ -232,6 +239,33 @@ _extend(WebDriverHelpers.prototype, {
    * Pauses for a short amount of time, giving webdriver time
    * to re-render the page, if needed.
    *
+   * @example
+   *     var authenticate = function () {
+   *       var name = &#x27;Teacher User&#x27;,
+   *           email = &#x27;teacher@example.com&#x27;,
+   *           password = &#x27;password&#x27;,
+   *           deferred = webdriver.promise.defer(),
+   *           i = 0;
+   *
+   *       helpers.populateElements({
+   *         &#x27;#login-email&#x27;: email,
+   *         &#x27;#login-password&#x27;: password
+   *       });
+   *       helpers.id(&#x27;login-buttons-password&#x27;).click();
+   *       helpers.avoidStaleElement();
+   *       helpers.id(&#x27;display-name-link&#x27;).getText()
+   *         .then(function (text) {
+   *           var expected = name;
+   *           if (text.indexOf(expected) !== 0) {
+   *             deferred.reject(new Error(text + &#x27; did not contain &#x27; + expected));
+   *           } else {
+   *             deferred.resolve();
+   *           }
+   *         });
+   *
+   *       return deferred.promise;
+   *     };
+   *
    * @method avoidStaleElement 
    *&#x2F;
   avoidStaleElement: function () {
@@ -247,16 +281,16 @@ _extend(WebDriverHelpers.prototype, {
    * Easily set values of form elements by passing a map of 
    * css selector &#x2F; element value pairs.
    *
-   * Ex:
-   *   &#x2F;&#x2F; populate a radio button group, a select box, a text
-   *   &#x2F;&#x2F; input and a textarea
-   *   var helpers = new WebDriverHelpers(webdriver, driver);
-   *   helpers.populateElements({
-   *     &#x27;input[name=&quot;gender&quot;][value=&quot;M&quot;]&#x27;: &#x27;M&#x27;,
-   *     &#x27;#country&#x27;: &quot;United States&quot;,
-   *     &#x27;#age&#x27;: &#x27;34&#x27;,
-   *     &#x27;#comment&#x27;: &quot;example msg&quot;
-   *   });
+   * @example
+   *     &#x2F;&#x2F; populate a radio button group, a select box, a text
+   *     &#x2F;&#x2F; input and a textarea
+   *     var helpers = new WebDriverHelpers(webdriver, driver);
+   *     helpers.populateElements({
+   *       &#x27;input[name=&quot;gender&quot;][value=&quot;M&quot;]&#x27;: &#x27;M&#x27;,
+   *       &#x27;#country&#x27;: &quot;United States&quot;,
+   *       &#x27;#age&#x27;: &#x27;34&#x27;,
+   *       &#x27;#comment&#x27;: &quot;example msg&quot;
+   *     });
    *
    * @method populateElements
    * @param {Object} locatorValuePairs key&#x2F;value pairs consisting of a css 
@@ -289,41 +323,40 @@ _extend(WebDriverHelpers.prototype, {
   &#x2F;**
    * Find first element in a group who&#x27;s text matches parameter.
    *
-   * For example:
+   * @example
+   *     var findPersonByName = function (nameOfPerson) {
+   *       var collectionLocator = {
+   *             &#x27;css&#x27;:&#x27;div.people &gt; .person&#x27;
+   *           },
+   *           criteriaLocator = {
+   *             &#x27;className&#x27;:&#x27;name&#x27;
+   *           };
+   *           
+   *       return findElementInCollectionByText(
+   *           collectionLocator,
+   *           criteriaLocator,
+   *           nameOfPerson
+   *         );
+   *     };
    *
-   *   var findPersonByName = function (nameOfPerson) {
-   *     var collectionLocator = {
-   *           &#x27;css&#x27;:&#x27;div.people &gt; .person&#x27;
-   *         },
-   *         criteriaLocator = {
-   *           &#x27;className&#x27;:&#x27;name&#x27;
-   *         };
-   *         
-   *     return findElementInCollectionByText(
-   *         collectionLocator,
-   *         criteriaLocator,
-   *         nameOfPerson
-   *       );
-   *   };
+   *     &#x2F;&#x2F;...can be called like:
+   *   
+   *     it(&quot;can click person&quot;,
+   *       function (done) {
+   *         authenticate().
+   *           then(findPersonByName(&quot;Jeff Winger&quot;)).
+   *           then(clickPerson).
+   *           then(finish(done), error);
+   *       });
    *
-   * ...can be called like:
-   * 
-   *   it(&quot;can click person&quot;,
-   *     function (done) {
-   *       authenticate().
-   *         then(findPersonByName(&quot;Jeff Winger&quot;)).
-   *         then(clickPerson).
-   *         then(finish(done), error);
-   *     });
+   *     &#x2F;&#x2F;...and will match:
    *
-   * ...and will match:
-   *
-   *   &lt;div class=&quot;people&quot;&gt;
-   *     &lt;div class=&quot;person&quot;&gt;
-   *       &lt;p class=&quot;name&quot;&gt;Jeff Winger&lt;&#x2F;p&gt;
-   *       &lt;p class=&quot;pic&quot;&gt;...&lt;&#x2F;p&gt;
+   *     &lt;div class=&quot;people&quot;&gt;
+   *       &lt;div class=&quot;person&quot;&gt;
+   *         &lt;p class=&quot;name&quot;&gt;Jeff Winger&lt;&#x2F;p&gt;
+   *         &lt;p class=&quot;pic&quot;&gt;...&lt;&#x2F;p&gt;
+   *       &lt;&#x2F;div&gt;
    *     &lt;&#x2F;div&gt;
-   *   &lt;&#x2F;div&gt;
    *
    * @method findElementInCollectionByText
    * @param {webdriver.Locator|Object.&lt;string&gt;} collectionLocator The locator 
@@ -392,6 +425,12 @@ _extend(WebDriverHelpers.prototype, {
    * in order to support dynamically added inputs.  For example, when
    * a second input field is added once a value is entered into the 
    * first input.
+   *
+   * @example
+   *     var populateFriends = function (names) {
+   *       var locator = {className: &quot;friends-mlText&quot;};
+   *       return helpers.populateTextBox (locator, names);
+   *     };
    *
    * @method populateTextBox  
    * @param {webdriver.Locator|Object.&lt;string&gt;} locator The locator
@@ -517,6 +556,7 @@ _extend(WebDriverHelpers.prototype, {
 
 });  &#x2F;&#x2F; end _extend WebDriverHelpers.prototype
 
+module.exports = WebDriverHelpers;
 
 })();
 

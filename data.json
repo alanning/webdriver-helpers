@@ -5,8 +5,8 @@
         "version": "1.0"
     },
     "files": {
-        "webdriver-helpers.js": {
-            "name": "webdriver-helpers.js",
+        "index.js": {
+            "name": "index.js",
             "modules": {},
             "classes": {
                 "WebDriverHelpers": 1
@@ -25,9 +25,12 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "webdriver-helpers.js",
-            "line": 28,
-            "description": "Provides several functions that make using WebDriver more \nconvenient.\n\nUsed like this:\n\n  var webdriver = require('selenium-webdriver'),\n      driver,\n      helpers;\n  \n  driver = require('./drivers/selenium-server.js')(webdriver, {\n    browserName: 'chrome',\n    seleniumProtocol: 'WebDriver',\n    'chrome.switches': ['--window-size=1366,768'] // this is being ignored\n  });\n\n  driver.manage().timeouts().setScriptTimeout(5000);\n  driver.manage().timeouts().implicitlyWait(5000);\n\n  helpers = new WebDriverHelpers(webdriver, driver);\n\n  function login (email, password) {\n    helpers.populateElements({\n      '#login-email': email,\n      '#login-password': password\n    });\n\n    helpers.id('login-submit-btn').click();\n  }",
+            "file": "index.js",
+            "line": 25,
+            "description": "Provides several functions that make using WebDriver more \nconvenient.",
+            "example": [
+                "\n    var webdriver = require('selenium-webdriver'),\n        WebDriverHelpers = require('webdriver-helpers'),\n        driver,\n        helpers;\n    \n    driver = require('./drivers/selenium-server.js')(webdriver, {\n      browserName: 'chrome',\n      seleniumProtocol: 'WebDriver',\n      'chrome.switches': ['--window-size=1366,768'] // this is being ignored\n    });\n\n    driver.manage().timeouts().setScriptTimeout(5000);\n    driver.manage().timeouts().implicitlyWait(5000);\n\n    helpers = new WebDriverHelpers(webdriver, driver);\n\n    function login (email, password) {\n      helpers.populateElements({\n        '#login-email': email,\n        '#login-password': password\n      });\n\n      helpers.id('login-submit-btn').click();\n    }"
+            ],
             "params": [
                 {
                     "name": "webdriver",
@@ -49,14 +52,14 @@
     },
     "classitems": [
         {
-            "file": "webdriver-helpers.js",
-            "line": 18,
+            "file": "index.js",
+            "line": 15,
             "description": "Add properties from source object to target object",
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 72,
+            "file": "index.js",
+            "line": 69,
             "description": "Sugar for: this.driver.findElement(this.webdriver.By.name(args))",
             "itemtype": "method",
             "name": "name",
@@ -74,9 +77,12 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 83,
+            "file": "index.js",
+            "line": 80,
             "description": "Sugar for: this.driver.findElement(this.webdriver.By.id(args))",
+            "example": [
+                "\n    helpers.id('btnSubmit').click()"
+            ],
             "itemtype": "method",
             "name": "id",
             "params": [
@@ -93,9 +99,12 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 94,
+            "file": "index.js",
+            "line": 93,
             "description": "Sugar for: this.driver.findElement(this.webdriver.By.tagName(args)",
+            "example": [
+                "\n    var verifyOnCheckinPage = function () {\n      helpers.tagName('h1').then(function (h1) {\n          h1.getText().then(function (text) {\n            expect(text).toBe(\"Check-In\");\n          });\n      });\n    };"
+            ],
             "itemtype": "method",
             "name": "tagName",
             "params": [
@@ -112,8 +121,8 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 105,
+            "file": "index.js",
+            "line": 112,
             "description": "Sugar for: this.driver.findElement(this.webdriver.By.className(args))",
             "itemtype": "method",
             "name": "className",
@@ -131,8 +140,8 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 116,
+            "file": "index.js",
+            "line": 123,
             "description": "Selects a drop-down option by value",
             "itemtype": "method",
             "name": "selectByValue",
@@ -151,8 +160,8 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 130,
+            "file": "index.js",
+            "line": 137,
             "description": "Selects a radio button element by value",
             "itemtype": "method",
             "name": "radioByValue",
@@ -171,17 +180,23 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 143,
+            "file": "index.js",
+            "line": 150,
             "description": "Pauses for a short amount of time, giving webdriver time\nto re-render the page, if needed.",
+            "example": [
+                "\n    var authenticate = function () {\n      var name = 'Teacher User',\n          email = 'teacher@example.com',\n          password = 'password',\n          deferred = webdriver.promise.defer(),\n          i = 0;\n\n      helpers.populateElements({\n        '#login-email': email,\n        '#login-password': password\n      });\n      helpers.id('login-buttons-password').click();\n      helpers.avoidStaleElement();\n      helpers.id('display-name-link').getText()\n        .then(function (text) {\n          var expected = name;\n          if (text.indexOf(expected) !== 0) {\n            deferred.reject(new Error(text + ' did not contain ' + expected));\n          } else {\n            deferred.resolve();\n          }\n        });\n\n      return deferred.promise;\n    };"
+            ],
             "itemtype": "method",
             "name": "avoidStaleElement",
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 158,
-            "description": "Easily set values of form elements by passing a map of \ncss selector / element value pairs.\n\nEx:\n  // populate a radio button group, a select box, a text\n  // input and a textarea\n  var helpers = new WebDriverHelpers(webdriver, driver);\n  helpers.populateElements({\n    'input[name=\"gender\"][value=\"M\"]': 'M',\n    '#country': \"United States\",\n    '#age': '34',\n    '#comment': \"example msg\"\n  });",
+            "file": "index.js",
+            "line": 192,
+            "description": "Easily set values of form elements by passing a map of \ncss selector / element value pairs.",
+            "example": [
+                "\n    // populate a radio button group, a select box, a text\n    // input and a textarea\n    var helpers = new WebDriverHelpers(webdriver, driver);\n    helpers.populateElements({\n      'input[name=\"gender\"][value=\"M\"]': 'M',\n      '#country': \"United States\",\n      '#age': '34',\n      '#comment': \"example msg\"\n    });"
+            ],
             "itemtype": "method",
             "name": "populateElements",
             "params": [
@@ -194,9 +209,12 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 201,
-            "description": "Find first element in a group who's text matches parameter.\n\nFor example:\n\n  var findPersonByName = function (nameOfPerson) {\n    var collectionLocator = {\n          'css':'div.people > .person'\n        },\n        criteriaLocator = {\n          'className':'name'\n        };\n        \n    return findElementInCollectionByText(\n        collectionLocator,\n        criteriaLocator,\n        nameOfPerson\n      );\n  };\n\n...can be called like:\n\n  it(\"can click person\",\n    function (done) {\n      authenticate().\n        then(findPersonByName(\"Jeff Winger\")).\n        then(clickPerson).\n        then(finish(done), error);\n    });\n\n...and will match:\n\n  <div class=\"people\">\n    <div class=\"person\">\n      <p class=\"name\">Jeff Winger</p>\n      <p class=\"pic\">...</p>\n    </div>\n  </div>",
+            "file": "index.js",
+            "line": 235,
+            "description": "Find first element in a group who's text matches parameter.",
+            "example": [
+                "\n    var findPersonByName = function (nameOfPerson) {\n      var collectionLocator = {\n            'css':'div.people > .person'\n          },\n          criteriaLocator = {\n            'className':'name'\n          };\n          \n      return findElementInCollectionByText(\n          collectionLocator,\n          criteriaLocator,\n          nameOfPerson\n        );\n    };\n\n    //...can be called like:\n  \n    it(\"can click person\",\n      function (done) {\n        authenticate().\n          then(findPersonByName(\"Jeff Winger\")).\n          then(clickPerson).\n          then(finish(done), error);\n      });\n\n    //...and will match:\n\n    <div class=\"people\">\n      <div class=\"person\">\n        <p class=\"name\">Jeff Winger</p>\n        <p class=\"pic\">...</p>\n      </div>\n    </div>"
+            ],
             "itemtype": "method",
             "name": "findElementInCollectionByText",
             "params": [
@@ -223,9 +241,12 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 298,
+            "file": "index.js",
+            "line": 331,
             "description": "Populate textbox(es) with string value(s).  If 'strings' is an \narray, locator is assumed to match a group of textboxes which \nall have the same name.  \n\nThis function performs a new find for each subsequent textbox \nin order to support dynamically added inputs.  For example, when\na second input field is added once a value is entered into the \nfirst input.",
+            "example": [
+                "\n    var populateFriends = function (names) {\n      var locator = {className: \"friends-mlText\"};\n      return helpers.populateTextBox (locator, names);\n    };"
+            ],
             "itemtype": "method",
             "name": "populateTextBox",
             "params": [
@@ -247,8 +268,8 @@
             "class": "WebDriverHelpers"
         },
         {
-            "file": "webdriver-helpers.js",
-            "line": 359,
+            "file": "index.js",
+            "line": 398,
             "description": "Sets the value of a form element.  \n\nSupports the following form elements:\n  input - text, radio, email, password\n  textarea\n  select",
             "itemtype": "method",
             "name": "populateElement",
@@ -270,7 +291,7 @@
     "warnings": [
         {
             "message": "Missing item type\nAdd properties from source object to target object",
-            "line": " webdriver-helpers.js:18"
+            "line": " index.js:15"
         }
     ]
 }
