@@ -22,4 +22,10 @@ To serve documentation locally:
 
 <br />
 
+
+### References
+
+[WebDriverJs User's Guide][2]
+
 [1]: http://yui.github.com/yuidoc/ "YUIDoc"
+[2]: http://code.google.com/p/selenium/wiki/WebDriverJs "WebDriverJs User's Guide"
