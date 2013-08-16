@@ -6,7 +6,7 @@ Convenience functions for working with WebDriver in Javascript
 
 ### Documentation
 
-API docs generated using [YUIDoc][1]
+Online API docs found here: http://alanning.github.io/webdriver-helpers/
 
 To re-generate documentation:
   1. install YUIDoc
@@ -18,6 +18,8 @@ To serve documentation locally:
   2. ```cd webdriver-helpers```
   3. ```yuidoc --server```
   4. point browser at http://localhost:3000/
+
+API docs generated using [YUIDoc][1]
 
 
 <br />
