@@ -8,6 +8,7 @@
     "type":"git",
     "url":"https://github.com/alanning/webdriver-helpers.git"
   },
+  "files":["README.md","index.js","History.md"],
   "bugs":"https://github.com/alanning/webdriver-helpers/issues",
   "main":"./index",
   "license":"MIT"
